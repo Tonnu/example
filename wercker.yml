@@ -41,7 +41,7 @@ deploy:
         code: |
           pwd
           ls -la
-          scp -i $PRIVATEKEY_PATH -o StrictHostKeyChecking=no -o UserKnownHostsFile=no example root@128.199.85.232:/var/local/www
+          scp -i $PRIVATEKEY_PATH -o StrictHostKeyChecking=no -o UserKnownHostsFile=no main.go root@128.199.85.232:/var/local/www
      - script:
         name: start application
         code: ssh -i $PRIVATEKEY_PATH -l root -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no 128.199.85.232 start main.go
