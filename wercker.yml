@@ -44,4 +44,4 @@ deploy:
           scp -i $PRIVATEKEY_PATH -o StrictHostKeyChecking=no -o UserKnownHostsFile=no main.go root@128.199.85.232:/var/local/www
      - script:
         name: start application
-        code: cd /var/local/www/ && ssh -i $PRIVATEKEY_PATH -l root -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no 128.199.85.232 go run main.go
+        code: ssh -i $PRIVATEKEY_PATH -l root -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no 128.199.85.232 go run /var/local/www/main.go
