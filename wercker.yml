@@ -26,7 +26,7 @@ build:
           rsync -avz "$WERCKER_SOURCE_DIR/" "$WERCKER_OUTPUT_DIR"
 deploy:
   steps:
-    - add-to-known_hosts:
+     - add-to-known_hosts:
           hostname: 128.199.85.232
      - mktemp:
         envvar: PRIVATEKEY_PATH
