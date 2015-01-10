@@ -1,1 +1,47 @@
 box: wercker/golang
+# Build definition
+build:
+  # The steps that will be executed on build
+  steps:
+    # Sets the go workspace and places you package
+    # at the right place in the workspace tree
+    - setup-go-workspace
+
+    # Gets the dependencies
+    - script:
+        name: go get
+        code: |
+          cd $WERCKER_SOURCE_DIR
+          go version
+          go get ./...
+
+    # Build the project
+    - script:
+        name: go build
+        code: |
+          go build ./...
+    - script:
+        name: copy output
+        code: |-
+          rsync -avz "$WERCKER_SOURCE_DIR/" "$WERCKER_OUTPUT_DIR"
+  deploy:
+  steps:
+  - add-to-known_hosts:
+        hostname: 128.199.85.232
+   - mktemp:
+      envvar: PRIVATEKEY_PATH
+   - create-file:
+      name: write key
+      filename: $PRIVATEKEY_PATH
+      content: $digitalocean_PRIVATE
+      overwrite: true
+      hide-from-log: true
+   - script:
+      name: transfer application
+      code: |
+        pwd
+        ls -la
+        scp -i $PRIVATEKEY_PATH -o StrictHostKeyChecking=no -o UserKnownHostsFile=no example root@128.199.85.232:/var/local/www
+   - script:
+      name: start application
+      code: ssh -i $PRIVATEKEY_PATH -l root -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no 128.199.85.232 start main.go
